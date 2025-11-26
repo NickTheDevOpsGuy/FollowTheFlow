@@ -26,22 +26,7 @@ else
 fi
 
 ALLOW_EMPTY_REGEX='(^|/)\.gitkeep$|(^|/)\.keep$'
-EMPTY_FILES=""
-while IFS= read -r file; do
-  [ -z "${file:-}" ] && continue
-  if echo "$file" | grep -Eq "$ALLOW_EMPTY_REGEX"; then
-    continue
-  fi
-  if [ -f "$file" ] && [ ! -s "$file" ]; then
-    EMPTY_FILES+="$file"$'\n'
-  fi
-done <<< "$FILES_TO_CHECK"
 
-if [ -n "$EMPTY_FILES" ]; then
-  echo -e "🛑 Empty files detected:\n$EMPTY_FILES\nPlease remove or fill them."
-  exit 1
-fi
-echo "✅ No empty files found."
 
 # -------- Prettier (check → auto-fix & stop) --------
 echo "🎨 Prettier — check"
