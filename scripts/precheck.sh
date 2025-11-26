@@ -8,50 +8,70 @@ cd "$(git rev-parse --show-toplevel)"
 # Optional: allow skipping with tag
 LAST_COMMIT_MSG="$(git log -1 --pretty=%B || true)"
 if echo "$LAST_COMMIT_MSG" | grep -qi '\[skip-precheck\]'; then
-  echo "⚠️  Skipping pre-push checks due to [skip-precheck] tag."
+  printf "⚠️  Skipping pre-push checks due to [skip-precheck] tag.\n"
   exit 0
 fi
 
-echo "🔍 Running Pre-Push Quality Gate..."
+printf "🔍 Running Pre-Push Quality Gate...\n"
 
-# -------- Empty file check (same behavior you had), scoped to changes --------
-echo "📂 Checking for empty files..."
+# -------- Empty file check --------
+printf "📂 Checking for empty files...\n"
+
 UPSTREAM="$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || true)"
 if [ -n "$UPSTREAM" ]; then
   BASE="$(git merge-base HEAD "$UPSTREAM")"
   FILES_TO_CHECK="$(git diff --name-only --diff-filter=AM "$BASE"..HEAD)"
 else
-  echo "⚠️  No upstream configured — scanning entire repo..."
+  printf "⚠️  No upstream configured — scanning entire repo...\n"
   FILES_TO_CHECK="$(git ls-files)"
 fi
 
 ALLOW_EMPTY_REGEX='(^|/)\.gitkeep$|(^|/)\.keep$'
+EMPTY_FILES=""
 
+if [ -n "$FILES_TO_CHECK" ]; then
+  while IFS= read -r file; do
+    [ -z "${file:-}" ] && continue
+    if printf "%s" "$file" | grep -Eq "$ALLOW_EMPTY_REGEX"; then
+      continue
+    fi
+    if [ -f "$file" ] && [ ! -s "$file" ]; then
+      EMPTY_FILES+="$file"$'\n'
+    fi
+  done <<< "$FILES_TO_CHECK"
+fi
+
+if [ -n "$EMPTY_FILES" ]; then
+  printf "🛑 Empty files detected:\n%s\nPlease remove or fill them.\n" "$EMPTY_FILES"
+  exit 1
+fi
+
+printf "✅ No empty files found.\n"
 
 # -------- Prettier (check → auto-fix & stop) --------
-echo "🎨 Prettier — check"
+printf "🎨 Prettier — check\n"
 if ! npx --no-install prettier --config .prettierrc.yml --ignore-path .prettierignore --check .; then
-  echo "💾 Prettier — writing fixes..."
+  printf "💾 Prettier — writing fixes...\n"
   npx --no-install prettier --config .prettierrc.yml --ignore-path .prettierignore --write .
   git add -A
   git commit -m "style: auto-format with Prettier [skip-precheck]"
-  echo "🛑 Prettier fixed files and committed. Push again."
+  printf "🛑 Prettier fixed files and committed. Push again.\n"
   exit 1
 fi
-echo "✅ Prettier passed."
+printf "✅ Prettier passed.\n"
 
-# -------- ESLint (cached src) --------
-echo "🧪 ESLint (cached, src)..."
+# -------- ESLint (cached: src) --------
+printf "🧪 ESLint (cached, src)...\n"
 npx --no-install eslint src --ext .js,.jsx,.ts,.tsx --cache
 
-# -------- ESLint (strict, repo root) --------
-echo "✨ ESLint (strict)..."
+# -------- ESLint (strict) --------
+printf "✨ ESLint (strict)...\n"
 npx --no-install eslint . --max-warnings=0
-echo "✅ ESLint passed."
+printf "✅ ESLint passed.\n"
 
 # -------- TypeScript --------
-echo "🛠️ TypeScript — type check"
+printf "🛠️ TypeScript — type check\n"
 npx --no-install tsc --noEmit --pretty false
-echo "✅ TypeScript passed."
+printf "✅ TypeScript passed.\n"
 
-echo "🚀 All checks passed. Ready to push!"
+printf "🚀 All checks passed. Ready to push!\n"
