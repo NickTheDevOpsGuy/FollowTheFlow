@@ -34,10 +34,10 @@ _A modern, colorful memory game where the pattern grows — can you keep up?_ �
 
 ---
 
-🌐 **Live Demo**  
+[🌐 **Live Demo**  
 _Once deployed to Vercel, drop your URL here, for example:_
 
-**https://follow-the-flow.vercel.app**
+**https://follow-the-flow.vercel.app**](https://follow-the-flow.vercel.app/)
 
 ---
 
