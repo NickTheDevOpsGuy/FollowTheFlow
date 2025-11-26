@@ -3,7 +3,7 @@
 _A modern, colorful memory game where the pattern grows — can you keep up?_ ⚡🧠
 
 <p align="center">
-  <img src="./public/followtheflow.svg" alt="FollowTheFlow logo" width="160" />
+  <img src="./public/assets/followtheflow.svg" alt="FollowTheFlow logo" width="160" />
 </p>
 
 <p align="center">
