@@ -30,7 +30,7 @@ _A modern, colorful memory game where the pattern grows — can you keep up?_ �
 
 ### Gameplay Demo
 
-> _Coming soon_ — add a short GIF of gameplay here (e.g. `./public/preview.gif`).
+![Game Demo GIF](./public/assets/preview.gif)
 
 ---
 
