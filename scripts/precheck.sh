@@ -32,9 +32,18 @@ EMPTY_FILES=""
 if [ -n "$FILES_TO_CHECK" ]; then
   while IFS= read -r file; do
     [ -z "${file:-}" ] && continue
+
+    # 🔹 Skip node_modules and other vendor dirs
+    case "$file" in
+      node_modules/*|pnpm-store/*|.pnpm/*)
+        continue
+        ;;
+    esac
+
     if printf "%s" "$file" | grep -Eq "$ALLOW_EMPTY_REGEX"; then
       continue
     fi
+
     if [ -f "$file" ] && [ ! -s "$file" ]; then
       EMPTY_FILES+="$file"$'\n'
     fi
