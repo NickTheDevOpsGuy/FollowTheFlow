@@ -1,4 +1,4 @@
-import "./Pad.css";
+import './Pad.css';
 
 type PadProps = {
   color: string;
@@ -9,7 +9,7 @@ type PadProps = {
 export function Pad({ color, active, onClick }: PadProps) {
   return (
     <button
-      className={`pad ${active ? "active" : ""}`}
+      className={`pad ${active ? 'active' : ''}`}
       style={{ backgroundColor: color }}
       onClick={onClick}
     />

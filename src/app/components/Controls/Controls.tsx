@@ -5,7 +5,7 @@ type ControlsProps = {
 
 export function Controls({ label, onStart }: ControlsProps) {
   return (
-    <div className="controls">
+    <div className='controls'>
       <button onClick={onStart}>{label}</button>
     </div>
   );

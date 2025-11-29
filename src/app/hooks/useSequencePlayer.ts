@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { STEP_DURATION, GAP_BETWEEN_STEPS, PadId } from "@/types/types";
+import { useState } from 'react';
+import { STEP_DURATION, GAP_BETWEEN_STEPS, PadId } from '@/types/types';
 
 export function useSequencePlayer() {
   const [activePad, setActivePad] = useState<number | null>(null);

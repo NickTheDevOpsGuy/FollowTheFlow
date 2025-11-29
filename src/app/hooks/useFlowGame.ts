@@ -1,11 +1,10 @@
-import { useState } from "react";
-import { PadId } from "@/types/types";
-import { createSequence } from "@/utils/sequence";
-import { useSequencePlayer } from "@/hooks/useSequencePlayer";
-
+import { useState } from 'react';
+import { PadId } from '@/types/types';
+import { createSequence } from '@/utils/sequence';
+import { useSequencePlayer } from '@/hooks/useSequencePlayer';
 
 export function useFlowGame() {
-  const [status, setStatus] = useState("Ready");
+  const [status, setStatus] = useState('Ready');
   const [sequence, setSequence] = useState<PadId[]>([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
@@ -14,19 +13,15 @@ export function useFlowGame() {
   const [round, setRound] = useState(1);
   const [score, setScore] = useState(0);
 
-  const { 
-    activePad, 
-    isPlayingSequence, 
-    playSequence, 
-    flashPad 
-} = useSequencePlayer();
+  const { activePad, isPlayingSequence, playSequence, flashPad } =
+    useSequencePlayer();
 
   // Button label: Start / Continue / Restart
   const buttonLabel = isGameOver
-    ? "Restart"
+    ? 'Restart'
     : round === 1
-      ? "Start"
-      : "Continue";
+      ? 'Start'
+      : 'Continue';
 
   const handlePadClick = (padId: PadId) => {
     if (isPlayingSequence || isGameOver || sequence.length === 0) {
@@ -44,22 +39,22 @@ export function useFlowGame() {
         // Player completed the whole sequence
         setScore((prev) => prev + sequence.length);
         setRound((prev) => prev + 1);
-        setStatus("Nice! Press Continue for the next round");
+        setStatus('Nice! Press Continue for the next round');
         // currentStep will be reset on the next Start
       } else {
         setCurrentStep(nextStep);
-        console.log("correct click", padId);
+        console.log('correct click', padId);
       }
     } else {
       // Wrong click → Game Over
-      console.log("wrong click", padId, "expected", expected);
+      console.log('wrong click', padId, 'expected', expected);
       setIsGameOver(true);
-      setStatus("Game over – press Restart to try again");
+      setStatus('Game over – press Restart to try again');
     }
   };
 
   const handleStart = () => {
-    setStatus("Playing...");
+    setStatus('Playing...');
 
     // If we’re restarting after game over, reset progression
     if (isGameOver) {
@@ -75,7 +70,7 @@ export function useFlowGame() {
     setCurrentStep(0);
 
     playSequence(seq, () => {
-      setStatus("Your turn");
+      setStatus('Your turn');
       setCurrentStep(0);
     });
   };

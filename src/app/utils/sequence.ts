@@ -1,6 +1,6 @@
 // src/utils/sequence.ts
 
-import { PadId } from "@/types/types";
+import { PadId } from '@/types/types';
 
 const PAD_IDS: PadId[] = [0, 1, 2, 3];
 
