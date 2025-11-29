@@ -133,6 +133,7 @@ All logic runs in your browser — no backend required.
 
 ```plaintext
 .
+├── eslint.config.ts
 ├── .github
 │   ├── ISSUE_TEMPLATE
 │   │   ├── bug.yml
@@ -148,19 +149,18 @@ All logic runs in your browser — no backend required.
 ├── .husky
 │   ├── pre-commit
 │   └── pre-push
+├── index.html
+├── LICENSE
+├── package.json
+├── package-lock.json
 ├── .prettierignore
 ├── .prettierrc
 ├── .prettierrc.json
 ├── .prettierrc.yml
-├── .stylelintrc.json
-├── eslint.config.ts
-├── index.html
-├── LICENSE
-├── package-lock.json
-├── package.json
 ├── public
 │   └── assets
-│       └── followtheflow.svg
+│       ├── followtheflow.svg
+│       └── preview.gif
 ├── README.md
 ├── scripts
 │   └── precheck.sh
@@ -174,16 +174,20 @@ All logic runs in your browser — no backend required.
 │       │   └── Pad
 │       │       ├── Pad.css
 │       │       └── Pad.tsx
+│       ├── hooks
+│       │   ├── useFlowGame.ts
+│       │   └── useSequencePlayer.ts
 │       ├── main.tsx
 │       ├── types
 │       │   └── types.ts
 │       └── utils
 │           └── sequence.ts
+├── .stylelintrc.json
 ├── tsconfig.app.json
 ├── tsconfig.json
 ├── tsconfig.node.json
-├── vite-env.d.ts
-└── vite.config.ts
+├── vite.config.ts
+└── vite-env.d.ts
 ```
 
 ---
