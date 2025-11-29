@@ -63,7 +63,7 @@ export function useFlowGame() {
       setScore(0);
     }
 
-    const seqLength = round; // sequence gets longer as rounds progress
+    const seqLength = Math.floor(1.8 * round); // sequence gets longer as rounds progress
     const seq = createSequence(seqLength);
 
     setSequence(seq);
