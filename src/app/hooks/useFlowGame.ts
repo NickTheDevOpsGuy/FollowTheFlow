@@ -1,18 +1,18 @@
-import { useState } from "react";
-import { PadId } from "@/types/types";
-import { createSequence } from "@/utils/sequence";
-import { useSequencePlayer } from "@/hooks/useSequencePlayer";
+import { useState } from 'react';
+import { PadId } from '@/types/types';
+import { createSequence } from '@/utils/sequence';
+import { useSequencePlayer } from '@/hooks/useSequencePlayer';
 
-type Difficulty = "easy" | "normal" | "hard";
-type DifficultyState = Difficulty | "unset";
+type Difficulty = 'easy' | 'normal' | 'hard';
+type DifficultyState = Difficulty | 'unset';
 
 function getSeqLength(round: number, difficulty: Difficulty) {
   switch (difficulty) {
-    case "easy":
+    case 'easy':
       return round;
-    case "normal":
+    case 'normal':
       return Math.floor(1.3 * round);
-    case "hard":
+    case 'hard':
       return Math.floor(round * 1.5 + 1);
     default:
       return round;
@@ -20,7 +20,7 @@ function getSeqLength(round: number, difficulty: Difficulty) {
 }
 
 export function useFlowGame() {
-  const [status, setStatus] = useState("Ready");
+  const [status, setStatus] = useState('Ready');
   const [sequence, setSequence] = useState<PadId[]>([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
@@ -30,7 +30,7 @@ export function useFlowGame() {
   const [score, setScore] = useState(0);
 
   // Difficulty selection
-  const [difficulty, setDifficulty] = useState<DifficultyState>("unset");
+  const [difficulty, setDifficulty] = useState<DifficultyState>('unset');
   const [isDifficultyLocked, setIsDifficultyLocked] = useState(false);
 
   const { activePad, isPlayingSequence, playSequence, flashPad } =
@@ -38,10 +38,10 @@ export function useFlowGame() {
 
   // Button label: Start / Continue / Restart
   const buttonLabel = isGameOver
-    ? "Restart"
+    ? 'Restart'
     : round === 1
-    ? "Start"
-    : "Continue";
+      ? 'Start'
+      : 'Continue';
 
   const handlePadClick = (padId: PadId) => {
     // Block clicking during playback, after game over, or before any sequence exists
@@ -61,7 +61,7 @@ export function useFlowGame() {
         // Player completed the whole sequence
         setScore((prev) => prev + sequence.length);
         setRound((prev) => prev + 1);
-        setStatus("Nice! Press Continue for the next round");
+        setStatus('Nice! Press Continue for the next round');
         // currentStep will be reset on the next Start
       } else {
         setCurrentStep(nextStep);
@@ -70,17 +70,17 @@ export function useFlowGame() {
       // Wrong click → Game Over
       setIsGameOver(true);
       setIsDifficultyLocked(false); // allow changing difficulty before restart
-      setStatus("Game over – press Restart to try again");
+      setStatus('Game over – press Restart to try again');
     }
   };
 
   const handleStart = () => {
-     if (difficulty === "unset") {
-        setStatus("Pick a difficulty first");
-        return;
+    if (difficulty === 'unset') {
+      setStatus('Pick a difficulty first');
+      return;
     }
-    
-    setStatus("Playing...");
+
+    setStatus('Playing...');
 
     // Lock difficulty on first start of a run
     if (!isDifficultyLocked) {
@@ -101,7 +101,7 @@ export function useFlowGame() {
     setCurrentStep(0);
 
     playSequence(seq, () => {
-      setStatus("Your turn");
+      setStatus('Your turn');
       setCurrentStep(0);
     });
   };
