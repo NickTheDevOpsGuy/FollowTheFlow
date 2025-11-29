@@ -3,6 +3,22 @@ import { PadId } from '@/types/types';
 import { createSequence } from '@/utils/sequence';
 import { useSequencePlayer } from '@/hooks/useSequencePlayer';
 
+type Difficulty = 'easy' | 'normal' | 'hard';
+type DifficultyState = Difficulty | 'unset';
+
+function getSeqLength(round: number, difficulty: Difficulty) {
+  switch (difficulty) {
+    case 'easy':
+      return round;
+    case 'normal':
+      return Math.floor(1.3 * round);
+    case 'hard':
+      return Math.floor(round * 1.5 + 1);
+    default:
+      return round;
+  }
+}
+
 export function useFlowGame() {
   const [status, setStatus] = useState('Ready');
   const [sequence, setSequence] = useState<PadId[]>([]);
@@ -12,6 +28,10 @@ export function useFlowGame() {
   // Round progression
   const [round, setRound] = useState(1);
   const [score, setScore] = useState(0);
+
+  // Difficulty selection
+  const [difficulty, setDifficulty] = useState<DifficultyState>('unset');
+  const [isDifficultyLocked, setIsDifficultyLocked] = useState(false);
 
   const { activePad, isPlayingSequence, playSequence, flashPad } =
     useSequencePlayer();
@@ -24,11 +44,13 @@ export function useFlowGame() {
       : 'Continue';
 
   const handlePadClick = (padId: PadId) => {
+    // Block clicking during playback, after game over, or before any sequence exists
     if (isPlayingSequence || isGameOver || sequence.length === 0) {
       return;
     }
 
-    flashPad(padId); // replaces the manual setTimeout logic
+    // Flash pad on user click
+    flashPad(padId);
 
     const expected = sequence[currentStep];
 
@@ -43,18 +65,27 @@ export function useFlowGame() {
         // currentStep will be reset on the next Start
       } else {
         setCurrentStep(nextStep);
-        console.log('correct click', padId);
       }
     } else {
       // Wrong click → Game Over
-      console.log('wrong click', padId, 'expected', expected);
       setIsGameOver(true);
+      setIsDifficultyLocked(false); // allow changing difficulty before restart
       setStatus('Game over – press Restart to try again');
     }
   };
 
   const handleStart = () => {
+    if (difficulty === 'unset') {
+      setStatus('Pick a difficulty first');
+      return;
+    }
+
     setStatus('Playing...');
+
+    // Lock difficulty on first start of a run
+    if (!isDifficultyLocked) {
+      setIsDifficultyLocked(true);
+    }
 
     // If we’re restarting after game over, reset progression
     if (isGameOver) {
@@ -63,7 +94,7 @@ export function useFlowGame() {
       setScore(0);
     }
 
-    const seqLength = Math.floor(1.8 * round); // sequence gets longer as rounds progress
+    const seqLength = getSeqLength(round, difficulty);
     const seq = createSequence(seqLength);
 
     setSequence(seq);
@@ -87,5 +118,8 @@ export function useFlowGame() {
     isPlayingSequence,
     handlePadClick,
     handleStart,
+    difficulty,
+    setDifficulty,
+    isDifficultyLocked,
   };
 }
