@@ -36,7 +36,7 @@
 .hud-status {
   font-size: 1.4rem;
   font-weight: 700;
-  margin-bottom: 16px; /* increased for better spacing */
+  margin-bottom: 16px;
 }
 
 .hud-meta {
@@ -52,6 +52,47 @@
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* ===== Difficulty row ===== */
+
+.hud-difficulty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.hud-difficulty-label {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.hud-difficulty-buttons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.difficulty-button {
+  border-radius: 9999px;
+  padding: 0.35rem 1rem;
+  border: 1px solid #c7d2fe;
+  background: #e5edff;
+  color: #1d4ed8;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.difficulty-button--active {
+  background: #1d4ed8;
+  color: #fff;
+  border-color: #1d4ed8;
 }
 
 /* ===== Pad Grid ===== */
@@ -121,7 +162,8 @@
 
 /* ===== Start / Continue / Restart Button ===== */
 
-button {
+/* scope the big CTA styles to the Controls area only */
+.controls button {
   padding: 10px 18px;
   font-size: 1rem;
   background: #2563eb;
@@ -133,15 +175,15 @@ button {
     background 0.15s ease,
     transform 0.15s ease,
     box-shadow 0.15s ease;
-  min-width: 120px; /* keeps it from shifting when text changes */
+  min-width: 120px;
   text-align: center;
 }
 
-button:hover {
+.controls button:hover {
   background: #1e54c6;
 }
 
-button:active {
+.controls button:active {
   transform: scale(0.96);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
